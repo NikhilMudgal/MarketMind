@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  db:
+    image: pgvector/pgvector:pg16  # Pre-loaded with Vector support for AI
+    container_name: marketmind_db
+    restart: always
+    ports:
+      - "5432:5432"  # Host Port : Container Port
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: adminpassword  # Change this for production!
+      POSTGRES_DB: marketmind
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:  # Ensures data persists even if you delete the container
