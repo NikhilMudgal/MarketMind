@@ -212,3 +212,4 @@ backend/**/__pycache__/
 backend/*.pyc
 backend/.env
 backend/.pytest_cache/
+.vscode
