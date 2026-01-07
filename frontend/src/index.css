@@ -1,2 +1,26 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
+:root {
+  /* * We use HSL (Hue, Saturation, Lightness) values 
+   * because it allows us to easily manipulate opacity in Tailwind 
+   * e.g., bg-primary/50
+   */
+  --primary: 221 83% 53%; /* Blue-600 */
+  --secondary: 215 28% 17%; /* Gray-900 */
+  --background: 0 0% 100%;
+  --foreground: 222 47% 11%;
+  
+  --font-sans: "Inter", sans-serif;
+}
+
+/* * Dark Mode Overrides 
+ * When class="dark" is added to <html>, these take over.
+ */
+.dark {
+  --primary: 217 91% 60%; /* Blue-500 */
+  --secondary: 210 40% 96.1%;
+  --background: 222 47% 11%;
+  --foreground: 210 40% 98%;
+}
