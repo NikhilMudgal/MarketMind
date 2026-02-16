@@ -1,6 +1,4 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 :root {
   /* * We use HSL (Hue, Saturation, Lightness) values 
@@ -23,4 +21,18 @@
   --secondary: 210 40% 96.1%;
   --background: 222 47% 11%;
   --foreground: 210 40% 98%;
+}
+
+@theme {
+  /* Custom colors using CSS variables with HSL format
+   * Tailwind v4 automatically generates utility classes like:
+   * bg-primary, text-primary, border-primary, etc.
+   */
+  --color-primary: hsl(var(--primary));
+  --color-secondary: hsl(var(--secondary));
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  
+  /* Font family */
+  --font-sans: var(--font-sans), sans-serif;
 }

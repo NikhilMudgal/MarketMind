@@ -1,10 +1,13 @@
 import './App.css'
-import { ThemeSwitcher } from './components/ThemeSwitcher'
-
+import { ThemeProvider } from './context/ThemeContext'
+import { ChatWindow } from './features/chat/components/ChatWindow'
+import './index.css'
 function App() {
 
   return (
-    <ThemeSwitcher></ThemeSwitcher>
+    <ThemeProvider>
+      <ChatWindow />
+    </ThemeProvider>
   )
 }
 
