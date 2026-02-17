@@ -8,14 +8,15 @@ interface ChatInputProps {
 }
   
 export function ChatInput({ value, onChange, onSend }: ChatInputProps) {
-    const { theme } = useTheme();
     
-    const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-      if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        onSend();
-      }
-    };
+  const { theme } = useTheme();
+    
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      onSend();
+    }
+  };
   
     return (
       <div className={`${theme.surface} border-t ${theme.border} p-4`}>
