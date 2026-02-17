@@ -3,14 +3,14 @@ import { useTheme } from "../../context/ThemeContext";
 
 export interface MessageProps {
     id: string;
-    text: string;
-    sender: string;
-    timestamp: string;
+    role: string;
+    content: string;
+    created_at: string;
 }
 
-export function Message({ text, sender, timestamp }: MessageProps) {
+export function Message({ content, role, created_at }: MessageProps) {
     const { theme } = useTheme();
-    const isUser = sender === 'user';
+    const isUser = role === 'user';
     
     return (
       <div className={`flex ${isUser ? 'justify-end' : 'justify-start'}`}>
@@ -21,11 +21,11 @@ export function Message({ text, sender, timestamp }: MessageProps) {
               : `${theme.surface} ${theme.text} ${theme.shadow}`
           }`}
         >
-          <p className="break-words">{text}</p>
+          <p className="break-words">{content}</p>
           <p className={`text-xs mt-1 ${
             isUser ? theme.primaryLight : theme.textSecondary
           }`}>
-            {timestamp}
+            {created_at}
           </p>
         </div>
       </div>
