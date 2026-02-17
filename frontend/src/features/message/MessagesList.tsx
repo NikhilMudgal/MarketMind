@@ -14,9 +14,9 @@ export function MessagesList({ messages }: MessagesListProps) {
           <Message
             key= { message.id }
             id= { message.id }
-            text= { message.text }
-            sender= { message.sender }
-            timestamp= { message.timestamp }
+            content = { message.content }
+            role= { message.role }
+            created_at= { message.created_at }
           />
         ))}
       </div>

@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.db.session import get_db
 from app.db.models import Conversation, Message
-from app.schemas import MessageCreate, MessageResponse, ChatHistory
+from app.schemas.schemas import MessageCreate, MessageResponse, ChatHistory
 import uuid
 
 router = APIRouter()

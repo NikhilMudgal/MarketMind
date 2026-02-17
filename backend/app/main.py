@@ -2,10 +2,9 @@ from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from sqlalchemy import text  # Import text to write raw SQL
-from db.session import get_db
+from app.db.session import get_db, engine
 from app.db.base import Base
-from app.db.session import engine
-from app.api.endpoints import chat
+from app.api.v1.endpoints import chat
 
 app = FastAPI(title = "MarketMind", version = "1.0.0")
 
