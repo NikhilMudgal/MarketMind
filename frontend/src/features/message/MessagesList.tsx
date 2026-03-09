@@ -1,7 +1,7 @@
 import { Bot } from "lucide-react";
-import { useTheme } from "../../context/ThemeContext";
 import { MessageBubble } from "../chat/components/MessageBubble";
-import { Message, type MessageProps } from "./Message";
+import { type MessageProps } from "./Message";
+import { useEffect, useRef } from "react";
 
 interface MessagesListProps {
     messages: MessageProps[];
@@ -11,6 +11,13 @@ interface MessagesListProps {
 export function MessagesList({ messages, isTyping }: MessagesListProps) {
     // const { theme } = useTheme();
     
+     const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Auto-scroll to bottom when a new message arrives
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, isTyping]);
+
     return (
     <div className="flex-1 overflow-y-auto p-4 space-y-6 bg-gray-50/50">
       
@@ -47,6 +54,9 @@ export function MessagesList({ messages, isTyping }: MessagesListProps) {
             </div>
          </div>
       )}
+
+        {/* Invisible div to scroll to */}
+      <div ref={messagesEndRef} />
       
     </div>
   );

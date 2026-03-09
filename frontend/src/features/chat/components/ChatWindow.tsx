@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { Header } from "../../../components/ui/Header";
 import { MessagesList } from "../../message/MessagesList";
 import { ChatInput } from "./ChatInput";
@@ -9,13 +9,6 @@ export function ChatWindow() {
     const [input, setInput] = useState<string>('');
     const [isTyping, setIsTyping] = useState<boolean>(false);
   
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-
-  // Auto-scroll to bottom when a new message arrives
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, isTyping]);
-
     const handleSendMessage = async (text: string) => {
     // 1. Add User Message to UI instantly
     const userMsg: MessageProps = { 
@@ -94,6 +87,4 @@ export function ChatWindow() {
         />
       </div>
     );
-     {/* Invisible div to scroll to */}
-      <div ref={messagesEndRef} />
   }
