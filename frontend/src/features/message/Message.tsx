@@ -4,10 +4,10 @@ import { useTheme } from "../../context/ThemeContext";
 
 export interface MessageProps {
   id: string;
-  role: string;
+  role: 'user' | 'assistant';
   content: string;
-  created_at: string;
-  stockData: StockData;
+  created_at?: string;
+  stockData?: StockData;
 }
 
 export function Message({ content, role, created_at }: MessageProps) {
