@@ -5,84 +5,84 @@ import { ChatInput } from "./ChatInput";
 import type { MessageProps } from "../../message/Message";
 
 export function ChatWindow() {
-    const [messages, setMessages] = useState<MessageProps[]>([
-      { id: "1", content: "Hey! How are you?", role: "other", created_at: "10:30 AM" },
-      { id: "2", content: "I'm doing great, thanks! How about you?", role: "user", created_at: "10:31 AM" },
-      { id: "3", content: "Pretty good! Just working on some projects.", role: "other", created_at: "10:32 AM" },
-    ]);
+    const [messages, setMessages] = useState<MessageProps[]>([]);
     const [input, setInput] = useState<string>('');
     const [isTyping, setIsTyping] = useState<boolean>(false);
   
-    const handleSend = async () => {
-      const currentTime = Date.now().toString()
-      setMessages(prev => [...prev , {
-        id: "4",
-        role: "user",
-        content: input,
-        created_at: currentTime
-      }]);
-      
-      if (input.trim()) {
-          setInput('');
-      }
+    const handleSendMessage = async (text: string) => {
+    // 1. Add User Message to UI instantly
+    const userMsg: MessageProps = { 
+        id: Date.now().toString(), 
+        role: 'user', 
+        content: text, 
+        created_at: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) 
+    };
+    setMessages(prev => [...prev, userMsg]);
+    setIsTyping(true);
 
-      const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter' && !e.shiftKey) {
-          e.preventDefault();
-          handleSend();
+    try {
+        // 2. Mock Agent Logic: Check for command
+        if (text.toLowerCase().startsWith('/stock ')) {
+            const ticker = text.split(' ')[1].toUpperCase();
+            
+            // Call your backend API
+            const response = await fetch(`http://localhost:8000/api/v1/finance/stock/${ticker}`);
+            
+            if (!response.ok) throw new Error("Stock data not found.");
+            
+            const data = await response.json();
+
+            // 3. Add AI Message WITH Stock Data
+            const aiMsg: MessageProps = { 
+                id: (Date.now()+1).toString(), 
+                role: 'assistant', 
+                content: `Here is the latest market data for ${ticker}:`, 
+                stockData: data, // Injecting the data here!
+                created_at: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) 
+            };
+            setMessages(prev => [...prev, aiMsg]);
+            
+        } else {
+            // Normal chat response
+            setTimeout(() => {
+                const aiMsg: MessageProps = { 
+                    id: (Date.now()+1).toString(), 
+                    role: 'assistant', 
+                    content: `I received: "${text}". \n\nTip: Type "/stock AAPL" or "/stock TSLA" to see my market data tools in action!`, 
+                    created_at: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) 
+                };
+                setMessages(prev => [...prev, aiMsg]);
+                setIsTyping(false);
+            }, 1000);
+            return; // Exit early so we don't hit the bottom setIsTyping(false) too fast
         }
-      };
-
-      try {
-        // 2. Call the Backend
-        const response = await fetch('http://localhost:8000/api/v1/chat/message', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-                content: input,
-                conversation_id: null // We will handle IDs later
-            })
-        });
-
-        const data = await response.json();
-
-        // 3. Display AI Response
-        setMessages(prev => [...prev, {
-            id: data.id,
-            role: 'assistant',
-            content: data.content,
-            created_at: new Date(data.created_at).toLocaleTimeString()
-        }]);
-
     } catch (error) {
-      // return (
-            // <div className="flex items-center justify-center h-screen">
-            //   <p className="text-red-500">{error}</p>
-            // </div>
-          // );
-        console.error("Error sending message:", error);
-        // Ideally, show an error toast here
+        console.error("Error:", error);
+        const errorMsg: MessageProps = { 
+            id: (Date.now()+1).toString(), 
+            role: 'assistant', 
+            content: "Sorry, I couldn't retrieve that stock symbol right now. Please check the ticker and try again.", 
+            created_at: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) 
+        };
+        setMessages(prev => [...prev, errorMsg]);
     } finally {
         setIsTyping(false);
     }
-
-      if (isTyping) {
-        return (
-          <div className="flex items-center justify-center h-screen">
-            <p>Loading messages...</p>
-          </div>
-        );
-      }
-    };
+  };
   
     return (
       <div className="flex flex-col h-screen max-w-2xl mx-auto">
         <Header title="Chat" status="Online" />
-        <MessagesList messages={messages} />
+        <MessagesList messages={messages} isTyping={isTyping} />
         <ChatInput
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          onSend={handleSend}
+          onSend={() => {
+            if (input.trim()) {
+              handleSendMessage(input);
+              setInput('');
+            }
+          }}
           
         />
       </div>

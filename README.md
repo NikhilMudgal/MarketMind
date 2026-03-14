@@ -10,3 +10,7 @@ An autonomous agent that doesn't just "chat." You give it a command: "Analyze Ap
 
 # setup postgresql with fastAPI
 1. Installed sqlalchemy ORM and postgresql driver psycopg2-binary
+
+# update requirement.txt file
+pip freeze > requirements.txt
+
