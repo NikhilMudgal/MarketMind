@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import text  # Import text to write raw SQL
 from app.db.session import get_db, engine
 from app.db.base import Base
-from app.api.v1.endpoints import chat, finance
+from app.api.v1.endpoints import chat, finance, documents
 
 app = FastAPI(title = "MarketMind", version = "1.0.0")
 
@@ -20,6 +20,7 @@ app.add_middleware(
 # 2. Register Routes
 app.include_router(chat.router, prefix="/api/v1/chat", tags=["chat"])
 app.include_router(finance.router, prefix="/api/v1/finance", tags=["finance"])
+app.include_router(documents.router, prefix="/api/v1/documents", tags=["documents"])
 
 @app.get("/health")
 def health_check(db: Session = Depends(get_db)):
