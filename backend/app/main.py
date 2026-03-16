@@ -4,7 +4,18 @@ from sqlalchemy.orm import Session
 from sqlalchemy import text  # Import text to write raw SQL
 from app.db.session import get_db, engine
 from app.db.base import Base
+
+from app.db import models
+
 from app.api.v1.endpoints import chat, finance, documents
+
+# --- 2. ADD THIS BLOCK: Enable vector extension BEFORE creating tables ---
+with engine.connect() as conn:
+    conn.execute(text("CREATE EXTENSION IF NOT EXISTS vector"))
+    conn.commit()
+
+# Now when this runs, it will see the missing table and create it safely.
+# Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title = "MarketMind", version = "1.0.0")
 
@@ -21,12 +32,3 @@ app.add_middleware(
 app.include_router(chat.router, prefix="/api/v1/chat", tags=["chat"])
 app.include_router(finance.router, prefix="/api/v1/finance", tags=["finance"])
 app.include_router(documents.router, prefix="/api/v1/documents", tags=["documents"])
-
-@app.get("/health")
-def health_check(db: Session = Depends(get_db)):
-    try:
-        # Try to execute a simple SQL query
-        db.execute(text("SELECT 1"))
-        return {"status": "healthy", "database": "connected"}
-    except Exception as e:
-        return {"status": "unhealthy", "database": "disconnected", "error": str(e)}
