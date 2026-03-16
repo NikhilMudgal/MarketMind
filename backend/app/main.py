@@ -15,7 +15,7 @@ with engine.connect() as conn:
     conn.commit()
 
 # Now when this runs, it will see the missing table and create it safely.
-# Base.metadata.create_all(bind=engine)
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title = "MarketMind", version = "1.0.0")
 
