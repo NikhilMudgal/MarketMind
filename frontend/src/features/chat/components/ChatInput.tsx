@@ -46,7 +46,7 @@ export function ChatInput({ value, onChange, onSend, onFileUpload, isUploading, 
 
   return (
     <div className={`${theme.surface} border-t ${theme.border} p-4`}>
-      <div className="max-w-3xl mx-auto flex items-end space-x-4">
+      <div className="max-w-3xl mx-auto flex justify-start">
         {/* 4. Hidden File Input */}
         <input
           type="file"
@@ -60,30 +60,29 @@ export function ChatInput({ value, onChange, onSend, onFileUpload, isUploading, 
         <button
           onClick={() => fileInputRef.current?.click()}
           disabled={disabled || isUploading}
-          className="p-2 text-gray-400 hover:text-blue-600 transition-colors disabled:opacity-50"
+          className="p-2 text-gray-400 hover:text-blue-600 transition-colors disabled:opacity-50 size-14"
           title="Upload PDF"
         >
           {isUploading ? <Loader2 size={20} className="animate-spin text-blue-600" /> : <Paperclip size={20} />}
         </button>
 
-        <div className="relative flex-1">
-          <textarea
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder="Ask MarketMind about a stock or upload a PDF..."
-            className="w-full resize-none rounded-xl border border-gray-200 bg-gray-50 py-3 pl-4 pr-12 text-sm focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 max-h-[150px] overflow-y-auto"
-            rows={1}
-            disabled={disabled || isUploading}
-          />
-          <button
-            onClick={handleSend}
-            disabled={!input.trim() || disabled || isUploading}
-            className={`${theme.primary} ${theme.primaryHover} text-white p-2 rounded-lg transition-colors`}
-          >
-            <Send size={20} />
-          </button>
-        </div>
+        <textarea
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder="Ask MarketMind about a stock or upload a PDF..."
+          className="size-14 grow w-full resize-none rounded-xl border border-gray-200 bg-gray-50 p-3 mr-2 text-sm focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 max-h-[150px] overflow-y-auto"
+          rows={1}
+          disabled={disabled || isUploading}
+        />
+        <button
+          onClick={handleSend}
+          disabled={!input.trim() || disabled || isUploading}
+          className={`${theme.primary} ${theme.primaryHover} text-white rounded-lg transition-colors p-3 size-14`}
+        >
+          <Send size={20} />
+        </button>
+
       </div>
     </div>
   );

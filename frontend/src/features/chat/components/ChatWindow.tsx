@@ -48,7 +48,7 @@ export function ChatWindow() {
       const aiMsg: MessageProps = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: `Successfully learned "${data.filename}"! I memorized ${data.chunks_saved} data chunks. You can now ask me questions about this document.`,
+        content: `Successfully learned "${file.name}"! I memorized ${data.chunk_processed} data chunks. You can now ask me questions about this document.`,
         created_at: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
       };
       setMessages(prev => [...prev, aiMsg]);
