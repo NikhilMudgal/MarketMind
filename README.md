@@ -14,3 +14,6 @@ An autonomous agent that doesn't just "chat." You give it a command: "Analyze Ap
 # update requirement.txt file
 pip freeze > requirements.txt
 
+
+# use this command to enable docker database to enable vectors
+docker exec -it marketmind_db psql -U admin -d marketmind -c "CREATE EXTENSION IF NOT EXISTS vector;"

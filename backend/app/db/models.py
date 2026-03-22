@@ -1,3 +1,4 @@
+from pgvector.sqlalchemy import Vector
 from sqlalchemy import Column, String, ForeignKey, DateTime, Text
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
@@ -26,6 +27,18 @@ class Message(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     conversation = relationship("Conversation", back_populates="messages")
+
+class DocumentEmbedding(Base):
+    __tablename__ = "document_embeddings"
+    
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    filename = Column(String, nullable=False)
+    content = Column(Text, nullable=False)
+
+    # 384 is the dimension size for the free 'all-MiniLM-L6-v2' model.
+    # If you switch to OpenAI embeddings later, change this to 1536.
+    embedding = Column(Vector(384), nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
 
 # class Users(Base):
 #     __tablename__ = "users"

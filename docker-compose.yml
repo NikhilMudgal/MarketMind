@@ -6,7 +6,7 @@ services:
     container_name: marketmind_db
     restart: always
     ports:
-      - "5432:5432"  # Host Port : Container Port
+      - "5433:5432"  # Host Port : Container Port
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: adminpassword  # Change this for production!
