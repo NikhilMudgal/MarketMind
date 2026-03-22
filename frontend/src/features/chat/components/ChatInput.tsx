@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { useTheme } from "../../../context/ThemeContext";
 import { Send, Paperclip, Loader2 } from "lucide-react";
 
@@ -7,7 +7,7 @@ interface ChatInputProps {
   onFileUpload?: (file: File) => void;
   isUploading?: boolean;
   disabled?: boolean;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   onSend: (message: string) => void;
 }
 
@@ -15,14 +15,12 @@ export function ChatInput({ value, onChange, onSend, onFileUpload, isUploading, 
 
   const { theme } = useTheme();
 
-  const [input, setInput] = useState('');
-
   const fileInputRef = useRef<HTMLInputElement>(null); // 3. Reference to hidden input
 
   const handleSend = () => {
-    if (input.trim()) {
-      onSend(input);
-      setInput('');
+    const text = value.trim();
+    if (text) {
+      onSend(text);
     }
   };
 
@@ -45,7 +43,7 @@ export function ChatInput({ value, onChange, onSend, onFileUpload, isUploading, 
   };
 
   return (
-    <div className={`${theme.surface} border-t ${theme.border} p-4`}>
+    <div className={`${theme.surface} border-t ${theme.border} p-2`}>
       <div className="max-w-3xl mx-auto flex justify-start">
         {/* 4. Hidden File Input */}
         <input
@@ -67,8 +65,8 @@ export function ChatInput({ value, onChange, onSend, onFileUpload, isUploading, 
         </button>
 
         <textarea
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
+          value={value}
+          onChange={onChange}
           onKeyDown={handleKeyDown}
           placeholder="Ask MarketMind about a stock or upload a PDF..."
           className="size-14 grow w-full resize-none rounded-xl border border-gray-200 bg-gray-50 p-3 mr-2 text-sm focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 max-h-[150px] overflow-y-auto"
@@ -77,7 +75,7 @@ export function ChatInput({ value, onChange, onSend, onFileUpload, isUploading, 
         />
         <button
           onClick={handleSend}
-          disabled={!input.trim() || disabled || isUploading}
+          disabled={!value.trim() || disabled || isUploading}
           className={`${theme.primary} ${theme.primaryHover} text-white rounded-lg transition-colors p-3 size-14`}
         >
           <Send size={20} />

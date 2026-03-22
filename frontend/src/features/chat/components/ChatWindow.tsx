@@ -138,11 +138,11 @@ export function ChatWindow() {
         onFileUpload={handleFileUpload}
         isUploading={isUploading}
         disabled={isTyping || isUploading}
-        onSend={() => {
-          if (input.trim()) {
-            handleSendMessage(input);
-            setInput('');
-          }
+        onSend={(message) => {
+          const text = message.trim();
+          if (!text) return;
+          handleSendMessage(text);
+          setInput('');
         }}
 
       />
