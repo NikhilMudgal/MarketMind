@@ -43,3 +43,31 @@ def process_and_store_document(file_bytes: bytes, filename: str, db: Session):
     finally:
         #5. Clean up the temporary file
         os.remove(temp_file_path)
+
+def search_documents(query: str, db: Session, limit: int = 3):
+    """
+    Translates a user's question into a vector and finds the most 
+    relevant chunks of text from the database.
+    """
+    try:
+        # 1. Turn the user's question into mathematical coordinates
+        query_vector = embeddings.embed_query(query)
+
+        # 2. Perform the Vector Search in PostgreSQL
+        # We order the database rows by mathematical closeness (cosine distance)
+        # and only grab the top 3 most relevant paragraphs.
+        results = db.query(DocumentEmbedding).order_by(
+            DocumentEmbedding.embedding.cosine_distance(query_vector)
+        ).limit(limit).all()
+
+        # 3. Format the results into clean text
+        context_chunks = []
+        for row in results:
+            context_chunks.append(f"[From {row.filename}]: {row.content}")
+
+        # Join them all together with double line breaks
+        return "\n\n".join(context_chunks)
+
+    except Exception as e:
+        print(f"Search error: {e}")
+        return ""
