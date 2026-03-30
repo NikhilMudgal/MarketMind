@@ -5,6 +5,8 @@ from app.db.models import Conversation, Message
 from app.schemas.schemas import MessageCreate, MessageResponse, ChatHistory
 import uuid
 
+from backend.app.services.document_service import search_documents
+
 router = APIRouter()
 
 @router.post("/message", response_model=MessageResponse)
@@ -26,18 +28,24 @@ def send_message(payload: MessageCreate, db: Session = Depends(get_db)):
         content=payload.content
     )
     db.add(user_msg)
+
+    # --- 2. THE RAG PIPELINE: SEARCH THE DATABASE ---
+    print(f"Searching database for: {payload.content}")
+    retrieved_context = search_documents(payload.content, db)
     
-    # 3. Generate AI Response (Mock logic for Sprint 1)
-    # TODO: In Sprint 4, we replace this with the real Agent.
-    ai_content = f"Echo: You said '{payload.content}'. I am MarketMind (v1)."
-    
+   # --- 3. BUILD THE AI RESPONSE ---
+    if retrieved_context.strip():
+        # If we found matches in the PDF, show them!
+        ai_content = f"**I searched your documents and found this context:**\n\n{retrieved_context}\n\n*(In the next sprint, a real LLM will read this and write a conversational answer!)*"
+    else:
+        ai_content = f"I received: '{payload.content}'. (No relevant documents found in my memory)."
+
     ai_msg = Message(
         conversation_id=conversation_id,
         role="assistant",
         content=ai_content
     )
     db.add(ai_msg)
-    
     db.commit()
     db.refresh(ai_msg)
     
