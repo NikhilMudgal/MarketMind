@@ -120,7 +120,7 @@ export function ChatWindow() {
           const aiMsg: MessageProps = {
             id: (Date.now() + 1).toString(),
             role: 'assistant',
-            content: data.response, // Use the actual response from the backend
+            content: data.content, // Use the actual response from the backend
             created_at: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
           };
           setMessages(prev => [...prev, aiMsg]);
