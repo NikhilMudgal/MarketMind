@@ -64,7 +64,7 @@ def search_documents(query: str, db: Session, limit: int = 3):
         context_chunks = []
         for row in results:
             context_chunks.append(f"[From {row.filename}]: {row.content}")
-
+        print(context_chunks)
         # Join them all together with double line breaks
         return "\n\n".join(context_chunks)
 
