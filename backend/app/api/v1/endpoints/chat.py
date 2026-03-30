@@ -5,7 +5,8 @@ from app.db.models import Conversation, Message
 from app.schemas.schemas import MessageCreate, MessageResponse, ChatHistory
 import uuid
 
-from backend.app.services.document_service import search_documents
+from app.services.document_service import search_documents
+
 
 router = APIRouter()
 
