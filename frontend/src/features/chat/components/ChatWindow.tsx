@@ -101,12 +101,26 @@ export function ChatWindow() {
         setMessages(prev => [...prev, aiMsg]);
 
       } else {
-        // Normal chat response
+        // --- NEW: CALL THE BACKEND FOR NORMAL CHAT MESSAGES ---
+        const response = await fetch('http://localhost:8000/api/v1/chat/message', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            content: text,
+            // conversation_id: null // We will handle actual conversation IDs later
+          })
+        });
+
+        if (!response.ok) throw new Error("Backend chat API failed");
+
+        const data = await response.json();
+        
+        // Add AI Message to UI
         setTimeout(() => {
           const aiMsg: MessageProps = {
             id: (Date.now() + 1).toString(),
             role: 'assistant',
-            content: `I received: "${text}". \n\nTip: Type "/stock AAPL" or "/stock TSLA" to see my market data tools in action!`,
+            content: data.content, // Use the actual response from the backend
             created_at: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
           };
           setMessages(prev => [...prev, aiMsg]);
