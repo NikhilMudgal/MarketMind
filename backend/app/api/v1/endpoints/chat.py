@@ -2,13 +2,34 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.db.session import get_db
 from app.db.models import Conversation, Message
-from app.schemas.schemas import MessageCreate, MessageResponse, ChatHistory
-import uuid
-
+from app.schemas.schemas import MessageCreate, MessageResponse
 from app.services.document_service import search_documents
+
+# --- 1. NEW IMPORTS FOR OLLAMA ---
+from langchain_ollama import ChatOllama
+from langchain_core.prompts import ChatPromptTemplate
 
 
 router = APIRouter()
+
+# --- 2. INITIALIZE THE FREE LOCAL LLM ---
+# This points to the model you just downloaded via Ollama
+llm = ChatOllama(model="llama3.2")
+
+# --- 3. CREATE THE SYSTEM PROMPT ---
+system_prompt = """
+You are MarketMind, an expert financial analyst assistant. 
+Use the following pieces of retrieved context to answer the user's question. 
+If you don't know the answer, or if the answer is not in the context, just say that you don't know. 
+Do not make up information. Keep your answer concise and professional.
+
+Context:
+{context}
+"""
+prompt_template = ChatPromptTemplate.from_messages([
+    ("system", system_prompt),
+    ("user", "{question}")
+])
 
 @router.post("/message", response_model=MessageResponse)
 def send_message(payload: MessageCreate, db: Session = Depends(get_db)):
@@ -30,16 +51,21 @@ def send_message(payload: MessageCreate, db: Session = Depends(get_db)):
     )
     db.add(user_msg)
 
-    # --- 2. THE RAG PIPELINE: SEARCH THE DATABASE ---
+    # --- THE RAG PIPELINE: SEARCH THE DATABASE ---
     print(f"Searching database for: {payload.content}")
     retrieved_context = search_documents(payload.content, db)
     
-   # --- 3. BUILD THE AI RESPONSE ---
+   # Generate the AI Response
     if retrieved_context.strip():
-        # If we found matches in the PDF, show them!
-        ai_content = f"**I searched your documents and found this context:**\n\n{retrieved_context}\n\n*(In the next sprint, a real LLM will read this and write a conversational answer!)*"
+        chain = prompt_template | llm
+        response = chain.invoke({
+            "context": retrieved_context,
+            "question": payload.content
+        })
+        ai_content = response.content
     else:
-        ai_content = f"I received: '{payload.content}'. (No relevant documents found in my memory)."
+        response = llm.invoke(payload.content)
+        ai_content = response.content
 
     ai_msg = Message(
         conversation_id=conversation_id,

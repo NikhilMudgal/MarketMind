@@ -9,11 +9,14 @@ An autonomous agent that doesn't just "chat." You give it a command: "Analyze Ap
 # setup fastAPI
 
 # setup postgresql with fastAPI
-1. Installed sqlalchemy ORM and postgresql driver psycopg2-binary
+3. Installed sqlalchemy ORM and postgresql driver psycopg2-binary
 
 # update requirement.txt file
-pip freeze > requirements.txt
+4. pip freeze > requirements.txt
 
 
 # use this command to enable docker database to enable vectors
-docker exec -it marketmind_db psql -U admin -d marketmind -c "CREATE EXTENSION IF NOT EXISTS vector;"
+5. docker exec -it marketmind_db psql -U admin -d marketmind -c "CREATE EXTENSION IF NOT EXISTS vector;"
+
+
+6. install ollama to run the lmm locally. Install the Model using the command "ollama run model_name".
