@@ -15,7 +15,7 @@ export interface ThemeConfig {
   }
   
   // Theme Type
-  export type ThemeName = 'light' | 'dark' | 'ocean';
+  export type ThemeName = 'light' | 'dark';
   
   // Themes Object
   export const themes: Record<ThemeName, ThemeConfig> = {
@@ -47,21 +47,6 @@ export interface ThemeConfig {
       border: 'border-gray-700',
       borderInput: 'border-gray-600',
       shadow: 'shadow-xl',
-      fontFamily: 'font-sans',
-    },
-    ocean: {
-      primary: 'bg-teal-600',
-      primaryHover: 'hover:bg-teal-700',
-      primaryText: 'text-teal-600',
-      primaryLight: 'text-teal-100',
-      secondary: 'bg-cyan-50',
-      background: 'bg-gradient-to-b from-cyan-50 to-blue-50',
-      surface: 'bg-white',
-      text: 'text-gray-800',
-      textSecondary: 'text-gray-600',
-      border: 'border-cyan-200',
-      borderInput: 'border-cyan-300',
-      shadow: 'shadow-lg',
       fontFamily: 'font-sans',
     }
   };
