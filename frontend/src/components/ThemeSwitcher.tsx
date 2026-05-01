@@ -1,24 +1,25 @@
-import type { ThemeName } from "../context/ThemeConfig";
+import { Sun, Moon } from "lucide-react";
 import { useTheme } from "../context/ThemeContext";
 
 export function ThemeSwitcher() {
-  const { currentTheme, setCurrentTheme, themes } = useTheme();
+  const { currentTheme, setCurrentTheme } = useTheme();
+  
+  const toggleTheme = () => {
+    setCurrentTheme(currentTheme === 'light' ? 'dark' : 'light');
+  };
   
   return (
-    <div className="flex gap-2">
-      {(Object.keys(themes) as ThemeName[]).map((themeName) => (
-        <button
-          key={themeName}
-          onClick={() => setCurrentTheme(themeName)}
-          className={`px-3 py-1 rounded text-sm capitalize ${
-            currentTheme === themeName
-              ? 'bg-white bg-opacity-30 font-semibold'
-              : 'bg-white bg-opacity-10 hover:bg-opacity-20'
-          }`}
-        >
-          {themeName}
-        </button>
-      ))}
-    </div>
+    <button
+      onClick={toggleTheme}
+      className={`p-2 rounded-full transition-colors ${
+        currentTheme === 'light' 
+          ? 'bg-white/20 text-white hover:bg-white/30' 
+          : 'bg-gray-800 text-yellow-400 hover:bg-gray-700 shadow-md'
+      }`}
+      aria-label="Toggle theme"
+      title={`Switch to ${currentTheme === 'light' ? 'dark' : 'light'} theme`}
+    >
+      {currentTheme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
+    </button>
   );
 }
